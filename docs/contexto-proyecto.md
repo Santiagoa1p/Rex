@@ -68,3 +68,5 @@ classDiagram
 - Los atributos son privados y se exponen mediante constructores, getters y setters.
 - `LocalDate` y `LocalTime` representan fechas y horas; `BigDecimal` representa importes monetarios.
 - `Turno` mantiene referencias a sus entidades relacionadas, y `Transaccion` referencia el turno cobrado.
+
+ola
