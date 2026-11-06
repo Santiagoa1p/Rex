@@ -6,6 +6,7 @@ import com.bken.model.Servicio;
 import com.bken.model.Transaccion;
 import com.bken.model.Turno;
 import com.bken.model.EstadoTurno;
+import com.bken.model.MetodoPago;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -26,7 +27,7 @@ public class Main {
                 "T001", cliente, especialista, servicio,
                 LocalDate.now(), LocalTime.of(10, 0), EstadoTurno.CONFIRMADO);
         Transaccion transaccion = new Transaccion(
-                "F001", turno, servicio.getPrecio(), "Efectivo", LocalDate.now());
+                "F001", turno, servicio.getPrecio(), MetodoPago.EFECTIVO, LocalDate.now());
 
         List<Turno> agenda = List.of(turno);
         List<Servicio> servicios = List.of(servicio);
@@ -102,7 +103,7 @@ public class Main {
         for (Transaccion transaccion : transacciones) {
             System.out.println("Factura: " + transaccion.getIdFactura()
                     + " | Fecha: " + transaccion.getFechaPago()
-                    + " | Metodo: " + transaccion.getMetodoPago()
+                    + " | Metodo: " + transaccion.getMetodoPago().getEtiqueta()
                     + " | Total: " + transaccion.getMontoTotal().toPlainString());
             total = total.add(transaccion.getMontoTotal());
         }
