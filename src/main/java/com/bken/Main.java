@@ -7,6 +7,10 @@ import com.bken.model.Transaccion;
 import com.bken.model.Turno;
 import com.bken.model.EstadoTurno;
 import com.bken.model.MetodoPago;
+import com.bken.model.HorarioDisponibilidad;
+
+import java.time.DayOfWeek;
+import java.util.ArrayList;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -18,9 +22,19 @@ public class Main {
     public static void main(String[] args) {
         Cliente cliente = new Cliente(
                 "C001", "Ana Torres", "3001234567", "ana@correo.com", LocalDate.now());
+
+List<HorarioDisponibilidad> horarios = new ArrayList<>();
+for (DayOfWeek dia : DayOfWeek.values()) {
+    if (dia.compareTo(DayOfWeek.FRIDAY) <= 0) {
+        horarios.add(new HorarioDisponibilidad(dia, LocalTime.of(9, 0), LocalTime.of(17, 0)));
+    }
+}
+
+
+
         Especialista especialista = new Especialista(
                 "E001", "Laura Gomez", "3007654321", "laura@correo.com",
-                "Estetica facial", "Lunes a viernes, 9:00 a 17:00");
+                "Estetica facial", horarios);
         Servicio servicio = new Servicio(
                 "S001", "Limpieza facial", new BigDecimal("85000"), 60);
         Turno turno = new Turno(
