@@ -12,6 +12,7 @@ public class Turno implements Serializable {
     private LocalDate fecha;
     private LocalTime hora;
     private String estado;
+    private static final long serialVersionUID = 1L;
 
     public Turno() {
     }

@@ -8,7 +8,8 @@ public abstract class Persona implements Serializable {
     private String nombre;
     private String telefono;
     private String correo;
-
+    private static final long serialVersionUID = 1L;
+    
     protected Persona() {
     }
 

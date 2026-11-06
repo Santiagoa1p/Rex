@@ -4,7 +4,7 @@ package com.bken.model;
 public class Especialista extends Persona {
     private String especialidad;
     private String horarioDisponibilidad;
-
+    private static final long serialVersionUID = 1L;
     public Especialista() {
     }
 

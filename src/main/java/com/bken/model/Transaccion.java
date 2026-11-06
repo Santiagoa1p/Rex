@@ -10,7 +10,8 @@ public class Transaccion implements Serializable {
     private BigDecimal montoTotal;
     private String metodoPago;
     private LocalDate fechaPago;
-
+    private static final long serialVersionUID = 1L;
+    
     public Transaccion() {
     }
 

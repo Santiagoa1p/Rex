@@ -5,7 +5,7 @@ import java.time.LocalDate;
 // Cliente hereda los datos comunes definidos en Persona.
 public class Cliente extends Persona {
     private LocalDate fechaRegistro;
-
+    private static final long serialVersionUID = 1L;
     public Cliente() {
     }
 
