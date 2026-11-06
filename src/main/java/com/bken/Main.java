@@ -5,6 +5,7 @@ import com.bken.model.Especialista;
 import com.bken.model.Servicio;
 import com.bken.model.Transaccion;
 import com.bken.model.Turno;
+import com.bken.model.EstadoTurno;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -23,7 +24,7 @@ public class Main {
                 "S001", "Limpieza facial", new BigDecimal("85000"), 60);
         Turno turno = new Turno(
                 "T001", cliente, especialista, servicio,
-                LocalDate.now(), LocalTime.of(10, 0), "Confirmado");
+                LocalDate.now(), LocalTime.of(10, 0), EstadoTurno.CONFIRMADO);
         Transaccion transaccion = new Transaccion(
                 "F001", turno, servicio.getPrecio(), "Efectivo", LocalDate.now());
 
@@ -82,7 +83,7 @@ public class Main {
             System.out.println("Cliente: " + turno.getCliente().getNombre());
             System.out.println("Especialista: " + turno.getEspecialista().getNombre());
             System.out.println("Servicio: " + turno.getServicio().getNombreServicio());
-            System.out.println("Estado: " + turno.getEstado());
+            System.out.println("Estado: " + turno.getEstado().getEtiqueta());
         }
     }
 

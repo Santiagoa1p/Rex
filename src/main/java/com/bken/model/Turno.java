@@ -11,14 +11,15 @@ public class Turno implements Serializable {
     private Servicio servicio;
     private LocalDate fecha;
     private LocalTime hora;
-    private String estado;
+    private EstadoTurno estado;
+    
     private static final long serialVersionUID = 1L;
 
     public Turno() {
     }
 
     public Turno(String idTurno, Cliente cliente, Especialista especialista, Servicio servicio,
-                 LocalDate fecha, LocalTime hora, String estado) {
+                 LocalDate fecha, LocalTime hora, EstadoTurno estado) {
         this.idTurno = idTurno;
         this.cliente = cliente;
         this.especialista = especialista;
@@ -76,11 +77,11 @@ public class Turno implements Serializable {
         this.hora = hora;
     }
 
-    public String getEstado() {
+    public EstadoTurno getEstado() {
         return estado;
     }
 
-    public void setEstado(String estado) {
+    public void setEstado(EstadoTurno estado) {
         this.estado = estado;
     }
 }
