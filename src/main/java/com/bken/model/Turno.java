@@ -12,6 +12,7 @@ public class Turno implements Serializable {
     private LocalDate fecha;
     private LocalTime hora;
     private EstadoTurno estado;
+    private Transaccion transaccion;
     
     private static final long serialVersionUID = 1L;
 
@@ -102,6 +103,22 @@ public class Turno implements Serializable {
         }
         estado = EstadoTurno.CANCELADO;
     }
+
+      public Transaccion getTransaccion() {
+        return transaccion;
+    }
+
+    // Cobra un turno confirmado: genera la transaccion con el precio del servicio.
+    public Transaccion cobrar(String idFactura, MetodoPago metodoPago, LocalDate fechaPago) {
+        if (estado != EstadoTurno.CONFIRMADO) {
+            throw new IllegalStateException(
+                    "Solo se puede cobrar un turno confirmado. Estado actual: " + estado.getEtiqueta());
+        }
+        transaccion = new Transaccion(idFactura, this, servicio.getPrecio(), metodoPago, fechaPago);
+        estado = EstadoTurno.COMPLETADO;
+        return transaccion;
+    }
+
 
 
 }

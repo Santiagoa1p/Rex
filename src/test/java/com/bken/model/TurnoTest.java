@@ -8,6 +8,7 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class TurnoTest {
@@ -75,4 +76,42 @@ class TurnoTest {
         Turno turno = crearTurno(EstadoTurno.CANCELADO);
         assertThrows(IllegalStateException.class, turno::cancelar);
     }
+
+      @Test
+    void cobrarUnTurnoConfirmadoCreaTransaccionYLoCompleta() {
+        Turno turno = crearTurno(EstadoTurno.CONFIRMADO);
+
+        Transaccion transaccion = turno.cobrar("F001", MetodoPago.EFECTIVO, LocalDate.of(2026, 11, 9));
+
+        assertEquals(EstadoTurno.COMPLETADO, turno.getEstado());
+        assertEquals(new BigDecimal("85000"), transaccion.getMontoTotal());
+        assertEquals(MetodoPago.EFECTIVO, transaccion.getMetodoPago());
+        assertSame(turno, transaccion.getTurno());
+        assertSame(transaccion, turno.getTransaccion());
+    }
+
+    @Test
+    void noSePuedeCobrarUnTurnoPendiente() {
+        Turno turno = crearTurno(EstadoTurno.PENDIENTE);
+        assertThrows(IllegalStateException.class,
+                () -> turno.cobrar("F001", MetodoPago.TARJETA, LocalDate.now()));
+    }
+
+    @Test
+    void noSePuedeCobrarUnTurnoCancelado() {
+        Turno turno = crearTurno(EstadoTurno.CANCELADO);
+        assertThrows(IllegalStateException.class,
+                () -> turno.cobrar("F001", MetodoPago.TARJETA, LocalDate.now()));
+    }
+
+    @Test
+    void noSePuedeCobrarDosVecesElMismoTurno() {
+        Turno turno = crearTurno(EstadoTurno.CONFIRMADO);
+        turno.cobrar("F001", MetodoPago.EFECTIVO, LocalDate.now());
+        assertThrows(IllegalStateException.class,
+                () -> turno.cobrar("F002", MetodoPago.EFECTIVO, LocalDate.now()));
+    }
+
+
+
 }

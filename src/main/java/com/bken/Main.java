@@ -40,8 +40,7 @@ for (DayOfWeek dia : DayOfWeek.values()) {
         Turno turno = new Turno(
                 "T001", cliente, especialista, servicio,
                 LocalDate.now(), LocalTime.of(10, 0), EstadoTurno.CONFIRMADO);
-        Transaccion transaccion = new Transaccion(
-                "F001", turno, servicio.getPrecio(), MetodoPago.EFECTIVO, LocalDate.now());
+       Transaccion transaccion = turno.cobrar("F001", MetodoPago.EFECTIVO, LocalDate.now());
 
         List<Turno> agenda = List.of(turno);
         List<Servicio> servicios = List.of(servicio);
