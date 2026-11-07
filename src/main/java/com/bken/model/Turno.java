@@ -84,4 +84,24 @@ public class Turno implements Serializable {
     public void setEstado(EstadoTurno estado) {
         this.estado = estado;
     }
+
+// Un turno solo se confirma si esta pendiente.
+    public void confirmar() {
+        if (estado != EstadoTurno.PENDIENTE) {
+            throw new IllegalStateException(
+                    "Solo se puede confirmar un turno pendiente. Estado actual: " + estado.getEtiqueta());
+        }
+        estado = EstadoTurno.CONFIRMADO;
+    }
+
+    // Un turno solo se cancela si aun no fue completado ni cancelado.
+    public void cancelar() {
+        if (estado != EstadoTurno.PENDIENTE && estado != EstadoTurno.CONFIRMADO) {
+            throw new IllegalStateException(
+                    "Solo se puede cancelar un turno pendiente o confirmado. Estado actual: " + estado.getEtiqueta());
+        }
+        estado = EstadoTurno.CANCELADO;
+    }
+
+
 }
