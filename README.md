@@ -94,6 +94,39 @@ classDiagram
         TARJETA
         TRANSFERENCIA
     }
+    class Usuario {
+        -String id
+        -String nombreUsuario
+        -String contrasenaHash
+        -Rol rol
+        -boolean activo
+        +autenticar(String nombreUsuario, String contrasena) boolean
+        +tieneRol(Rol rol) boolean
+    }
+    class Rol {
+        <<enumeration>>
+        ADMINISTRADOR
+        RECEPCIONISTA
+        ESPECIALISTA
+    }
+    class Dao~T~ {
+        <<interface>>
+        +guardar(T entidad) void
+        +buscarPorId(String id) Optional~T~
+        +listar() List~T~
+        +eliminar(String id) void
+    }
+    class TurnoDao {
+        <<interface>>
+        +listarPorFecha(LocalDate fecha) List~Turno~
+    }
+    class UsuarioDao {
+        <<interface>>
+        +buscarPorNombreUsuario(String nombreUsuario) Optional~Usuario~
+    }
+
+
+
 
     Persona <|-- Cliente
     Persona <|-- Especialista
@@ -104,6 +137,11 @@ classDiagram
     Turno "1" -- "0..1" Transaccion : se cobra mediante
     Turno --> EstadoTurno
     Transaccion --> MetodoPago
+    Usuario --> Rol
+    Dao~T~ <|-- TurnoDao
+    Dao~T~ <|-- UsuarioDao
+    TurnoDao ..> Turno : gestiona
+    UsuarioDao ..> Usuario : gestiona
 ```
 
 ## Decisiones de diseno
@@ -115,3 +153,6 @@ classDiagram
 - `EstadoTurno` y `MetodoPago` son enumeraciones: restringen los valores posibles y evitan errores de texto libre.
 - `HorarioDisponibilidad` es una clase propia (día, hora de inicio, hora de fin) para que `Especialista.estaDisponible()` pueda evaluar disponibilidad en vez de interpretar un texto.
 - `Turno` controla su ciclo de vida con `confirmar()`, `cancelar()` y `cobrar()`; solo `cobrar()` crea la `Transaccion`, con el precio del servicio.
+- `Usuario` y `Rol` controlan el acceso; la contraseña se guarda como hash SHA-256, nunca en texto plano.
+- La persistencia se separa en interfaces DAO (`Dao<T>` y una por entidad: `ClienteDao`, `EspecialistaDao`, `ServicioDao`, `TurnoDao`, `TransaccionDao`, `UsuarioDao`). Hoy se implementarán sobre archivos y en la siguiente entrega sobre base de datos, sin tocar el modelo.
+- El nombre "ERP" se justifica porque el sistema integra en un solo modelo agenda, personal, catálogo de servicios, facturación y control de acceso. Hoy el núcleo es el agendamiento de turnos; inventario y reportes son módulos futuros.
