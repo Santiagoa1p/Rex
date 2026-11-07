@@ -1,5 +1,7 @@
 package com.bken.model;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,4 +40,29 @@ public class Especialista extends Persona {
     public void setHorarios(List<HorarioDisponibilidad> horarios) {
         this.horarios = horarios;
     }
+
+    // Indica si algun horario cubre el dia y la franja completa del servicio.
+    public boolean estaDisponible(LocalDate fecha, LocalTime hora, int duracionMinutos) {
+        LocalTime fin = hora.plusMinutes(duracionMinutos);
+
+        // Si el fin no es posterior al inicio, la duracion es invalida o el servicio cruza la medianoche.
+        if (!fin.isAfter(hora)) {
+            return false;
+        }
+
+        for (HorarioDisponibilidad horario : horarios) {
+            boolean mismoDia = horario.getDia() == fecha.getDayOfWeek();
+            boolean empiezaDentro = !hora.isBefore(horario.getHoraInicio());
+            boolean terminaDentro = !fin.isAfter(horario.getHoraFin());
+
+            if (mismoDia && empiezaDentro && terminaDentro) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+
+
 }
