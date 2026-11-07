@@ -8,14 +8,15 @@ public class Transaccion implements Serializable {
     private String idFactura;
     private Turno turno;
     private BigDecimal montoTotal;
-    private String metodoPago;
+    private MetodoPago metodoPago;
     private LocalDate fechaPago;
+    private static final long serialVersionUID = 1L;
 
     public Transaccion() {
     }
 
     public Transaccion(String idFactura, Turno turno, BigDecimal montoTotal,
-                       String metodoPago, LocalDate fechaPago) {
+                       MetodoPago metodoPago, LocalDate fechaPago) {
         this.idFactura = idFactura;
         this.turno = turno;
         this.montoTotal = montoTotal;
@@ -47,11 +48,11 @@ public class Transaccion implements Serializable {
         this.montoTotal = montoTotal;
     }
 
-    public String getMetodoPago() {
+    public MetodoPago getMetodoPago() {
         return metodoPago;
     }
 
-    public void setMetodoPago(String metodoPago) {
+    public void setMetodoPago(MetodoPago metodoPago) {
         this.metodoPago = metodoPago;
     }
 

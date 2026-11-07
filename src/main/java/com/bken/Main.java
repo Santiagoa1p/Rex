@@ -5,6 +5,12 @@ import com.bken.model.Especialista;
 import com.bken.model.Servicio;
 import com.bken.model.Transaccion;
 import com.bken.model.Turno;
+import com.bken.model.EstadoTurno;
+import com.bken.model.MetodoPago;
+import com.bken.model.HorarioDisponibilidad;
+
+import java.time.DayOfWeek;
+import java.util.ArrayList;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -16,16 +22,25 @@ public class Main {
     public static void main(String[] args) {
         Cliente cliente = new Cliente(
                 "C001", "Ana Torres", "3001234567", "ana@correo.com", LocalDate.now());
+
+List<HorarioDisponibilidad> horarios = new ArrayList<>();
+for (DayOfWeek dia : DayOfWeek.values()) {
+    if (dia.compareTo(DayOfWeek.FRIDAY) <= 0) {
+        horarios.add(new HorarioDisponibilidad(dia, LocalTime.of(9, 0), LocalTime.of(17, 0)));
+    }
+}
+
+
+
         Especialista especialista = new Especialista(
                 "E001", "Laura Gomez", "3007654321", "laura@correo.com",
-                "Estetica facial", "Lunes a viernes, 9:00 a 17:00");
+                "Estetica facial", horarios);
         Servicio servicio = new Servicio(
                 "S001", "Limpieza facial", new BigDecimal("85000"), 60);
         Turno turno = new Turno(
                 "T001", cliente, especialista, servicio,
-                LocalDate.now(), LocalTime.of(10, 0), "Confirmado");
-        Transaccion transaccion = new Transaccion(
-                "F001", turno, servicio.getPrecio(), "Efectivo", LocalDate.now());
+                LocalDate.now(), LocalTime.of(10, 0), EstadoTurno.CONFIRMADO);
+       Transaccion transaccion = turno.cobrar("F001", MetodoPago.EFECTIVO, LocalDate.now());
 
         List<Turno> agenda = List.of(turno);
         List<Servicio> servicios = List.of(servicio);
@@ -82,7 +97,7 @@ public class Main {
             System.out.println("Cliente: " + turno.getCliente().getNombre());
             System.out.println("Especialista: " + turno.getEspecialista().getNombre());
             System.out.println("Servicio: " + turno.getServicio().getNombreServicio());
-            System.out.println("Estado: " + turno.getEstado());
+            System.out.println("Estado: " + turno.getEstado().getEtiqueta());
         }
     }
 
@@ -101,7 +116,7 @@ public class Main {
         for (Transaccion transaccion : transacciones) {
             System.out.println("Factura: " + transaccion.getIdFactura()
                     + " | Fecha: " + transaccion.getFechaPago()
-                    + " | Metodo: " + transaccion.getMetodoPago()
+                    + " | Metodo: " + transaccion.getMetodoPago().getEtiqueta()
                     + " | Total: " + transaccion.getMontoTotal().toPlainString());
             total = total.add(transaccion.getMontoTotal());
         }

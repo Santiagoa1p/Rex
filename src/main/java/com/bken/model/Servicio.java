@@ -8,7 +8,8 @@ public class Servicio implements Serializable {
     private String nombreServicio;
     private BigDecimal precio;
     private int duracionMinutos;
-
+    private static final long serialVersionUID = 1L;
+    
     public Servicio() {
     }
 

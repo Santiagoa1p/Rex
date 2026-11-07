@@ -11,13 +11,16 @@ public class Turno implements Serializable {
     private Servicio servicio;
     private LocalDate fecha;
     private LocalTime hora;
-    private String estado;
+    private EstadoTurno estado;
+    private Transaccion transaccion;
+    
+    private static final long serialVersionUID = 1L;
 
     public Turno() {
     }
 
     public Turno(String idTurno, Cliente cliente, Especialista especialista, Servicio servicio,
-                 LocalDate fecha, LocalTime hora, String estado) {
+                 LocalDate fecha, LocalTime hora, EstadoTurno estado) {
         this.idTurno = idTurno;
         this.cliente = cliente;
         this.especialista = especialista;
@@ -75,11 +78,47 @@ public class Turno implements Serializable {
         this.hora = hora;
     }
 
-    public String getEstado() {
+    public EstadoTurno getEstado() {
         return estado;
     }
 
-    public void setEstado(String estado) {
+    public void setEstado(EstadoTurno estado) {
         this.estado = estado;
     }
+
+// Un turno solo se confirma si esta pendiente.
+    public void confirmar() {
+        if (estado != EstadoTurno.PENDIENTE) {
+            throw new IllegalStateException(
+                    "Solo se puede confirmar un turno pendiente. Estado actual: " + estado.getEtiqueta());
+        }
+        estado = EstadoTurno.CONFIRMADO;
+    }
+
+    // Un turno solo se cancela si aun no fue completado ni cancelado.
+    public void cancelar() {
+        if (estado != EstadoTurno.PENDIENTE && estado != EstadoTurno.CONFIRMADO) {
+            throw new IllegalStateException(
+                    "Solo se puede cancelar un turno pendiente o confirmado. Estado actual: " + estado.getEtiqueta());
+        }
+        estado = EstadoTurno.CANCELADO;
+    }
+
+      public Transaccion getTransaccion() {
+        return transaccion;
+    }
+
+    // Cobra un turno confirmado: genera la transaccion con el precio del servicio.
+    public Transaccion cobrar(String idFactura, MetodoPago metodoPago, LocalDate fechaPago) {
+        if (estado != EstadoTurno.CONFIRMADO) {
+            throw new IllegalStateException(
+                    "Solo se puede cobrar un turno confirmado. Estado actual: " + estado.getEtiqueta());
+        }
+        transaccion = new Transaccion(idFactura, this, servicio.getPrecio(), metodoPago, fechaPago);
+        estado = EstadoTurno.COMPLETADO;
+        return transaccion;
+    }
+
+
+
 }

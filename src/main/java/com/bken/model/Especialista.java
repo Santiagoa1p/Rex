@@ -1,18 +1,28 @@
 package com.bken.model;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
+
 // Especialista hereda los datos comunes definidos en Persona.
 public class Especialista extends Persona {
-    private String especialidad;
-    private String horarioDisponibilidad;
+    private static final long serialVersionUID = 1L;
 
+    private String especialidad;
+    private List<HorarioDisponibilidad> horarios = new ArrayList<>();
+
+   // private String horarioDisponibilidad;
+    
     public Especialista() {
     }
 
+
     public Especialista(String id, String nombre, String telefono, String correo,
-                        String especialidad, String horarioDisponibilidad) {
+                        String especialidad, List<HorarioDisponibilidad> horarios) {
         super(id, nombre, telefono, correo);
         this.especialidad = especialidad;
-        this.horarioDisponibilidad = horarioDisponibilidad;
+        this.horarios = horarios;
     }
 
     public String getEspecialidad() {
@@ -23,11 +33,36 @@ public class Especialista extends Persona {
         this.especialidad = especialidad;
     }
 
-    public String getHorarioDisponibilidad() {
-        return horarioDisponibilidad;
+    public List<HorarioDisponibilidad> getHorarios() {
+        return horarios;
     }
 
-    public void setHorarioDisponibilidad(String horarioDisponibilidad) {
-        this.horarioDisponibilidad = horarioDisponibilidad;
+    public void setHorarios(List<HorarioDisponibilidad> horarios) {
+        this.horarios = horarios;
     }
+
+    // Indica si algun horario cubre el dia y la franja completa del servicio.
+    public boolean estaDisponible(LocalDate fecha, LocalTime hora, int duracionMinutos) {
+        LocalTime fin = hora.plusMinutes(duracionMinutos);
+
+        // Si el fin no es posterior al inicio, la duracion es invalida o el servicio cruza la medianoche.
+        if (!fin.isAfter(hora)) {
+            return false;
+        }
+
+        for (HorarioDisponibilidad horario : horarios) {
+            boolean mismoDia = horario.getDia() == fecha.getDayOfWeek();
+            boolean empiezaDentro = !hora.isBefore(horario.getHoraInicio());
+            boolean terminaDentro = !fin.isAfter(horario.getHoraFin());
+
+            if (mismoDia && empiezaDentro && terminaDentro) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
+
+
 }
