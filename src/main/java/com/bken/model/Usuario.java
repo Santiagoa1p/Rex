@@ -27,6 +27,19 @@ public class Usuario implements Serializable {
         this.activo = true;
     }
 
+    // Reconstruye un usuario leido de la base de datos, donde solo esta el hash.
+    // No usa el constructor publico porque ese volveria a cifrar el hash.
+    public static Usuario reconstruir(String id, String nombreUsuario, String contrasenaHash,
+                                      Rol rol, boolean activo) {
+        Usuario usuario = new Usuario();
+        usuario.id = id;
+        usuario.nombreUsuario = nombreUsuario;
+        usuario.contrasenaHash = contrasenaHash;
+        usuario.rol = rol;
+        usuario.activo = activo;
+        return usuario;
+    }
+
     // Credenciales correctas y cuenta activa.
     public boolean autenticar(String nombreUsuario, String contrasena) {
         return activo

@@ -108,6 +108,12 @@ public class Turno implements Serializable {
         return transaccion;
     }
 
+    // Lo usa el DAO para reconstruir un turno que ya fue cobrado.
+    // Para cobrar un turno nuevo se usa cobrar(), que valida el estado.
+    public void setTransaccion(Transaccion transaccion) {
+        this.transaccion = transaccion;
+    }
+
     // Cobra un turno confirmado: genera la transaccion con el precio del servicio.
     public Transaccion cobrar(String idFactura, MetodoPago metodoPago, LocalDate fechaPago) {
         if (estado != EstadoTurno.CONFIRMADO) {
