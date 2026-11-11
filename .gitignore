@@ -1,2 +1,6 @@
 target/
 .vscode/
+
+# Credenciales de la base de datos: nunca se suben al repositorio
+config.properties
+config-test.properties

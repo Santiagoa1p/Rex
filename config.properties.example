@@ -1,0 +1,12 @@
+# Copia este archivo como config.properties y llena tus datos de conexion.
+# config.properties esta en .gitignore para no subir la contrasena a GitHub.
+
+# PostgreSQL en Neon (copia la cadena de conexion desde el panel de Neon)
+URL=jdbc:postgresql://<host>.neon.tech/<base_de_datos>?sslmode=require
+USERNAME=<usuario>
+PASSWORD=<contrasena>
+
+# PostgreSQL local
+# URL=jdbc:postgresql://localhost:5432/bken
+# USERNAME=postgres
+# PASSWORD=postgres
