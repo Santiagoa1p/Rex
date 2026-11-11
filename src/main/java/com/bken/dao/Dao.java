@@ -11,5 +11,7 @@ public interface Dao<T> {
 
     List<T> listar();
 
+    void actualizar(T entidad);
+
     void eliminar(String id);
 }
