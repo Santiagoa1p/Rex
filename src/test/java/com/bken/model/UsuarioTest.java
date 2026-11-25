@@ -42,6 +42,14 @@ class UsuarioTest {
     }
 
     @Test
+    void usuarioReconstruidoDesdeElHashAutenticaConLaContrasenaOriginal() {
+        Usuario leido = Usuario.reconstruir(
+                "U001", "recepcion", usuario.getContrasenaHash(), Rol.RECEPCIONISTA, true);
+        assertTrue(leido.autenticar("recepcion", "clave123"));
+        assertFalse(leido.autenticar("recepcion", "otraClave"));
+    }
+
+    @Test
     void tieneRolIndicaElRolAsignado() {
         assertTrue(usuario.tieneRol(Rol.RECEPCIONISTA));
         assertFalse(usuario.tieneRol(Rol.ADMINISTRADOR));

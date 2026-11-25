@@ -16,6 +16,13 @@
 
 
         <dependencies>
+            <!-- Driver JDBC de PostgreSQL (el mismo del proyecto de clase) -->
+            <dependency>
+                <groupId>org.postgresql</groupId>
+                <artifactId>postgresql</artifactId>
+                <version>42.7.13</version>
+            </dependency>
+
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter</artifactId>
