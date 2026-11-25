@@ -18,24 +18,13 @@ import com.bken.model.Usuario;
 
 import java.io.Console;
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Scanner;
 
 // Interfaz de consola. Solo lee lo que escribe el usuario, llama al controlador y muestra la respuesta:
 // no tiene reglas de negocio ni acceso a la base de datos.
 public class VistaConsola {
-
-    private static final DateTimeFormatter FECHA = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-    // Formato de miles con punto (85.000) y sin tildes, para que se vea bien en cualquier terminal de Windows.
-    private static final DecimalFormat PESOS =
-            new DecimalFormat("$#,##0.##", DecimalFormatSymbols.getInstance(Locale.forLanguageTag("es-CO")));
-    private static final String[] NOMBRES_DIAS =
-            {"lunes", "martes", "miercoles", "jueves", "viernes", "sabado", "domingo"};
 
     private final Scanner entrada;
     private final SesionControlador sesion;
@@ -180,9 +169,9 @@ public class VistaConsola {
         }
         for (Cliente cliente : respuesta.getDato()) {
             System.out.println(cliente.getId() + " | " + cliente.getNombre()
-                    + " | Tel: " + valorOGuion(cliente.getTelefono())
-                    + " | Correo: " + valorOGuion(cliente.getCorreo())
-                    + " | Registro: " + cliente.getFechaRegistro().format(FECHA));
+                    + " | Tel: " + Formato.valorOGuion(cliente.getTelefono())
+                    + " | Correo: " + Formato.valorOGuion(cliente.getCorreo())
+                    + " | Registro: " + Formato.fecha(cliente.getFechaRegistro()));
         }
     }
 
@@ -255,9 +244,9 @@ public class VistaConsola {
         for (Especialista especialista : respuesta.getDato()) {
             System.out.println(especialista.getId() + " | " + especialista.getNombre()
                     + " | " + especialista.getEspecialidad()
-                    + " | Tel: " + valorOGuion(especialista.getTelefono()));
+                    + " | Tel: " + Formato.valorOGuion(especialista.getTelefono()));
             for (HorarioDisponibilidad horario : especialista.getHorarios()) {
-                System.out.println("    " + NOMBRES_DIAS[horario.getDia().getValue() - 1]
+                System.out.println("    " + Formato.dia(horario.getDia())
                         + " de " + horario.getHoraInicio() + " a " + horario.getHoraFin());
             }
         }
@@ -294,7 +283,7 @@ public class VistaConsola {
         }
         for (Servicio servicio : respuesta.getDato()) {
             System.out.println(servicio.getIdServicio() + " | " + servicio.getNombreServicio()
-                    + " | " + pesos(servicio.getPrecio())
+                    + " | " + Formato.pesos(servicio.getPrecio())
                     + " | " + servicio.getDuracionMinutos() + " min");
         }
     }
@@ -329,7 +318,7 @@ public class VistaConsola {
                 leer("Metodo de pago (EFECTIVO, TARJETA o TRANSFERENCIA)"));
         mostrar(respuesta);
         if (respuesta.isExito()) {
-            System.out.println("Total cobrado: " + pesos(respuesta.getDato().getMontoTotal()));
+            System.out.println("Total cobrado: " + Formato.pesos(respuesta.getDato().getMontoTotal()));
         }
     }
 
@@ -343,7 +332,7 @@ public class VistaConsola {
             System.out.println("No hay turnos.");
         }
         for (Turno turno : respuesta.getDato()) {
-            System.out.println(turno.getIdTurno() + " | " + turno.getFecha().format(FECHA) + " " + turno.getHora()
+            System.out.println(turno.getIdTurno() + " | " + Formato.fecha(turno.getFecha()) + " " + turno.getHora()
                     + " | " + turno.getServicio().getNombreServicio()
                     + " | Cliente: " + turno.getCliente().getNombre()
                     + " | Especialista: " + turno.getEspecialista().getNombre()
@@ -378,16 +367,16 @@ public class VistaConsola {
             System.out.println("No hay pagos registrados.");
         }
         for (Transaccion pago : respuesta.getDato()) {
-            System.out.println(pago.getIdFactura() + " | " + pago.getFechaPago().format(FECHA)
+            System.out.println(pago.getIdFactura() + " | " + Formato.fecha(pago.getFechaPago())
                     + " | Turno " + pago.getTurno().getIdTurno()
                     + " | " + pago.getMetodoPago().getEtiqueta()
-                    + " | " + pesos(pago.getMontoTotal()));
+                    + " | " + Formato.pesos(pago.getMontoTotal()));
         }
         return true;
     }
 
     private void mostrarTotal(Respuesta<BigDecimal> total) {
-        System.out.println(total.isExito() ? "Total: " + pesos(total.getDato()) : total.getMensaje());
+        System.out.println(total.isExito() ? "Total: " + Formato.pesos(total.getDato()) : total.getMensaje());
     }
 
     // ---------- Usuarios ----------
@@ -462,7 +451,7 @@ public class VistaConsola {
     }
 
     private String leerConValorActual(String etiqueta, String actual) {
-        String nuevo = leer(etiqueta + " [" + valorOGuion(actual) + "]");
+        String nuevo = leer(etiqueta + " [" + Formato.valorOGuion(actual) + "]");
         return nuevo.isBlank() ? actual : nuevo;
     }
 
@@ -491,13 +480,5 @@ public class VistaConsola {
     private void subtitulo(String texto) {
         String sinPunto = texto.endsWith(".") ? texto.substring(0, texto.length() - 1) : texto;
         System.out.println("\n--- " + sinPunto + " ---");
-    }
-
-    private String pesos(BigDecimal valor) {
-        return PESOS.format(valor);
-    }
-
-    private String valorOGuion(String valor) {
-        return valor == null || valor.isBlank() ? "-" : valor;
     }
 }
